@@ -8,8 +8,6 @@ install:
   - ps: choco install maven
   - ps: $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
   - mvn --version
-  - rustc --version
-  - cargo --version
 build_script:
   - mvn --batch-mode clean package -DskipTests
 test_script:
