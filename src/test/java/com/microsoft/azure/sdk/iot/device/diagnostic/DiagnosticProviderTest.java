@@ -1,10 +1,7 @@
-package com.microsoft.vs.diagnostic;
+package com.microsoft.azure.sdk.iot.device.diagnostic;
 
 import com.microsoft.azure.sdk.iot.device.Message;
 
-import mockit.*;
-import org.bouncycastle.jcajce.provider.symmetric.ARC4;
-import org.junit.Assert;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNotEquals;
