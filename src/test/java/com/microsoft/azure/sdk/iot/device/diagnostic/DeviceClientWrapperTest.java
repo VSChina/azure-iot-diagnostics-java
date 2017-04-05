@@ -312,8 +312,8 @@ public class DeviceClientWrapperTest {
     }
 
     @Test
-    // Sampling switch will not be changed when twin format invalid
-    public void samplingWillNotBeChangedWhenTwinFormatInvalid(
+    // Sampling switch will turn off when twin format invalid
+    public void samplingWillTurnOffWhenTwinFormatInvalid(
             @Mocked final MqttTransport mockTransport)
             throws URISyntaxException, IOException
     {
@@ -333,13 +333,14 @@ public class DeviceClientWrapperTest {
         DeviceTwin dt = Deencapsulation.getField(dc,"deviceTwin");
         Twin t = Deencapsulation.getField(dt,"twinObject");
         final IDiagnosticProvider p = Deencapsulation.getField(wrapper,"diagnosticProvider");
+        t.updateTwin("{\"desired\":{\"diag_enable\":\"true\",\"diag_sample_rate\":100}}");
         t.updateTwin("{\"desired\":{\"diag_enable\":\"tru1e\",\"diag_sample_rate\":100}}");
         assertEquals(p.NeedSampling(),false);
     }
 
     @Test
-    // Sampling rate will not be changed when twin format invalid
-    public void samplingRateNotBeChangedWhenTwinFormatInvalid(
+    // Sampling rate will set to 0 when twin format invalid
+    public void samplingRateWillSetToZeroWhenTwinFormatInvalid(
             @Mocked final MqttTransport mockTransport)
             throws URISyntaxException, IOException
     {
@@ -359,7 +360,18 @@ public class DeviceClientWrapperTest {
         DeviceTwin dt = Deencapsulation.getField(dc,"deviceTwin");
         Twin t = Deencapsulation.getField(dt,"twinObject");
         final IDiagnosticProvider p = Deencapsulation.getField(wrapper,"diagnosticProvider");
+        t.updateTwin("{\"desired\":{\"diag_enable\":\"true\",\"diag_sample_rate\":20}}");
         t.updateTwin("{\"desired\":{\"diag_enable\":\"true\",\"diag_sample_rate\":101}}");
+        assertEquals(p.getSamplingRatePercentage(),0);
+    }
+
+    @Test
+    // Set default diagnostic provider when user does not provide one
+    public void setDefaultDiagnosticProviderWhenUserDoesNotProvideOne()
+    {
+        DeviceClientWrapper wrapper = new DeviceClientWrapper(DEVICE_CONNECTION_STRING);
+        final IDiagnosticProvider p = Deencapsulation.getField(wrapper,"diagnosticProvider");
+        assertEquals(p.getSamplingRateSource(), IDiagnosticProvider.SamplingRateSource.None);
         assertEquals(p.getSamplingRatePercentage(),0);
     }
 
