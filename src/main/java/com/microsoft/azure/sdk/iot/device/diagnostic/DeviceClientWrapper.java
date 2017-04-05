@@ -51,7 +51,8 @@ public class DeviceClientWrapper {
                         System.out.println("Sampling rate changed to " + newVal);
                         diagnosticProvider.setSamplingRatePercentage(newVal);
                     } catch (Exception e) {
-                        System.out.println("Received invalid value of sampling percentage");
+                        System.out.println("Received invalid value of sampling percentage " + propertyValue + " , set to zero");
+                        diagnosticProvider.setSamplingRatePercentage(0);
                         return;
                     }
                 }
@@ -63,7 +64,8 @@ public class DeviceClientWrapper {
                 }else if(val.equals("false")) {
                     diagnosticProvider.setServerSamplingTurnedOn(false);
                 }else {
-                    System.out.println("Received invalid value of sampling switch");
+                    System.out.println("Received invalid value of sampling switch " + val + " , set to false");
+                    diagnosticProvider.setServerSamplingTurnedOn(false);
                     return;
                 }
             }
@@ -71,6 +73,10 @@ public class DeviceClientWrapper {
                 this.userTwinGenericCallback.PropertyCall(propertyKey,propertyValue,this.userTwinGenericCallbackContext);
             }
         }
+    }
+
+    public DeviceClientWrapper(String connString) throws URISyntaxException {
+        this(connString,new ContinuousDiagnosticProvider(IDiagnosticProvider.SamplingRateSource.None,0));
     }
 
     public DeviceClientWrapper(String connString,IDiagnosticProvider diagnosticProvider) throws URISyntaxException {

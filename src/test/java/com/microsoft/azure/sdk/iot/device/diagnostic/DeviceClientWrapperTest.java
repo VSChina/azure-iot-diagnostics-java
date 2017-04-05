@@ -367,12 +367,10 @@ public class DeviceClientWrapperTest {
 
     @Test
     // Set default diagnostic provider when user does not provide one
-    public void setDefaultDiagnosticProviderWhenUserDoesNotProvideOne()
-    {
+    public void setDefaultDiagnosticProviderWhenUserDoesNotProvideOne() throws URISyntaxException {
         DeviceClientWrapper wrapper = new DeviceClientWrapper(DEVICE_CONNECTION_STRING);
         final IDiagnosticProvider p = Deencapsulation.getField(wrapper,"diagnosticProvider");
         assertEquals(p.getSamplingRateSource(), IDiagnosticProvider.SamplingRateSource.None);
         assertEquals(p.getSamplingRatePercentage(),0);
     }
-
 }
