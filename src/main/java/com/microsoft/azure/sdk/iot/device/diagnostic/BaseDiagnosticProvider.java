@@ -62,7 +62,8 @@ public abstract class BaseDiagnosticProvider implements IDiagnosticProvider {
         return true;
     }
 
-    public Message Process(Message message) {
+    @Override
+    public final Message Process(Message message) {
         if(!NeedSampling()) {
             return message;
         }

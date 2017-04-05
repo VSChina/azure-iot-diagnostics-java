@@ -15,10 +15,10 @@ public class DeviceClientWrapper {
     private DeviceClient deviceClient;
     private IDiagnosticProvider diagnosticProvider;
     private boolean userCalledStartTwin;
-    private TwinStatusCallBack _twinStatusCallback;
-    private Object _twinStatusCallbackContext;
-    private TwinGenericCallBack _twinGenericCallback;
-    private Object _twinGenericCallbackContext;
+    private TwinStatusCallBack twinStatusCallback;
+    private Object twinStatusCallbackContext;
+    private TwinGenericCallBack twinGenericCallback;
+    private Object twinGenericCallbackContext;
 
 
     protected class TwinStatusCallBack implements IotHubEventCallback{
@@ -77,13 +77,13 @@ public class DeviceClientWrapper {
         this.deviceClient = new DeviceClient(connString,IotHubClientProtocol.MQTT);
         this.diagnosticProvider = diagnosticProvider;
         this.userCalledStartTwin = false;
-        this._twinStatusCallback = new TwinStatusCallBack();
-        this._twinGenericCallback = new TwinGenericCallBack();
+        this.twinStatusCallback = new TwinStatusCallBack();
+        this.twinGenericCallback = new TwinGenericCallBack();
     }
 
     public void open() throws IOException {
         this.deviceClient.open();
-        this.deviceClient.startDeviceTwin(this._twinStatusCallback,this._twinStatusCallbackContext,this._twinGenericCallback,this._twinGenericCallbackContext);
+        this.deviceClient.startDeviceTwin(this.twinStatusCallback,this.twinStatusCallbackContext,this.twinGenericCallback,this.twinGenericCallbackContext);
     }
 
     public void close() throws IOException {
@@ -116,10 +116,10 @@ public class DeviceClientWrapper {
             this.deviceClient.startDeviceTwin(deviceTwinStatusCallback, deviceTwinStatusCallbackContext, genericPropertyCallBack, genericPropertyCallBackContext);
         }else{
             this.userCalledStartTwin = true;
-            this._twinStatusCallback.userTwinStatusCallback = deviceTwinStatusCallback;
-            this._twinStatusCallback.userTwinStatusCallbackContext = deviceTwinStatusCallbackContext;
-            this._twinGenericCallback.userTwinGenericCallback = genericPropertyCallBack;
-            this._twinGenericCallback.userTwinGenericCallbackContext = genericPropertyCallBackContext;
+            this.twinStatusCallback.userTwinStatusCallback = deviceTwinStatusCallback;
+            this.twinStatusCallback.userTwinStatusCallbackContext = deviceTwinStatusCallbackContext;
+            this.twinGenericCallback.userTwinGenericCallback = genericPropertyCallBack;
+            this.twinGenericCallback.userTwinGenericCallbackContext = genericPropertyCallBackContext;
         }
     }
 
