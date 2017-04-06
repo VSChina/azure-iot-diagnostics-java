@@ -4,6 +4,9 @@
 package com.microsoft.azure.sdk.iot.device.diagnostic;
 
 import com.microsoft.azure.sdk.iot.device.*;
+import com.microsoft.azure.sdk.iot.device.diagnostic.ContinuousDiagnosticProvider;
+import com.microsoft.azure.sdk.iot.device.diagnostic.DeviceClientWrapper;
+import com.microsoft.azure.sdk.iot.device.diagnostic.IDiagnosticProvider;
 
 
 import java.io.IOException;

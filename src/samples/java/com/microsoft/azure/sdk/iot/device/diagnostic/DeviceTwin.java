@@ -7,6 +7,10 @@ import com.microsoft.azure.sdk.iot.device.*;
 import com.microsoft.azure.sdk.iot.device.DeviceTwin.Device;
 import com.microsoft.azure.sdk.iot.device.DeviceTwin.Property;
 import com.microsoft.azure.sdk.iot.device.DeviceTwin.PropertyCallBack;
+import com.microsoft.azure.sdk.iot.device.diagnostic.ContinuousDiagnosticProvider;
+import com.microsoft.azure.sdk.iot.device.diagnostic.DeviceClientWrapper;
+import com.microsoft.azure.sdk.iot.device.diagnostic.IDiagnosticProvider;
+
 
 
 import java.io.IOException;

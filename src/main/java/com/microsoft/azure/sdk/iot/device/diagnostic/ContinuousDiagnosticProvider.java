@@ -22,4 +22,5 @@ public class ContinuousDiagnosticProvider extends BaseDiagnosticProvider {
         }
         return false;
     }
+
 }
