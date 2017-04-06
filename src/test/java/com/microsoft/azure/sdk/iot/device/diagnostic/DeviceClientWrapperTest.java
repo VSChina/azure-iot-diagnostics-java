@@ -110,7 +110,7 @@ public class DeviceClientWrapperTest {
             }
         };
 
-        DeviceClientWrapper wrapper = new DeviceClientWrapper(DEVICE_CONNECTION_STRING,mockDiagnosticProvider);
+        DeviceClientWrapper wrapper = new DeviceClientWrapper(DEVICE_CONNECTION_STRING,new ContinuousDiagnosticProvider(IDiagnosticProvider.SamplingRateSource.Server,10));
         wrapper.open();
         wrapper.startDeviceTwin(mockIHCB,null,mockPCB,null);
 
@@ -118,10 +118,30 @@ public class DeviceClientWrapperTest {
         DeviceTwin dt = Deencapsulation.getField(dc,"deviceTwin");
         Twin t = Deencapsulation.getField(dt,"twinObject");
         t.updateTwin("{\"desired\":{\"custom\":\"value\"}}");
+
+        DeviceClientWrapper wrapper2 = new DeviceClientWrapper(DEVICE_CONNECTION_STRING,new ContinuousDiagnosticProvider(IDiagnosticProvider.SamplingRateSource.Client,10));
+        wrapper2.open();
+        wrapper2.startDeviceTwin(mockIHCB,null,mockPCB,null);
+
+        DeviceClient dc2 = Deencapsulation.getField(wrapper2,"deviceClient");
+        DeviceTwin dt2 = Deencapsulation.getField(dc2,"deviceTwin");
+        Twin t2 = Deencapsulation.getField(dt2,"twinObject");
+        t2.updateTwin("{\"desired\":{\"custom\":\"value\"}}");
+
+        DeviceClientWrapper wrapper3 = new DeviceClientWrapper(DEVICE_CONNECTION_STRING,new ContinuousDiagnosticProvider(IDiagnosticProvider.SamplingRateSource.None,10));
+        wrapper3.open();
+        wrapper3.startDeviceTwin(mockIHCB,null,mockPCB,null);
+
+        DeviceClient dc3 = Deencapsulation.getField(wrapper3,"deviceClient");
+        DeviceTwin dt3 = Deencapsulation.getField(dc3,"deviceTwin");
+        Twin t3 = Deencapsulation.getField(dt3,"twinObject");
+        t3.updateTwin("{\"desired\":{\"custom\":\"value\"}}");
+        
         new Verifications()
         {
             {
                 mockPCB.PropertyCall("custom",(Object)"value",(Object)any);
+                times = 3;
             }
         };
     }
@@ -142,7 +162,7 @@ public class DeviceClientWrapperTest {
             }
         };
 
-        DeviceClientWrapper wrapper = new DeviceClientWrapper(DEVICE_CONNECTION_STRING,mockDiagnosticProvider);
+        DeviceClientWrapper wrapper = new DeviceClientWrapper(DEVICE_CONNECTION_STRING,new ContinuousDiagnosticProvider(IDiagnosticProvider.SamplingRateSource.Server,20));
         wrapper.open();
         wrapper.startDeviceTwin(mockIHCB,null,mockPCB,null);
 
@@ -150,6 +170,25 @@ public class DeviceClientWrapperTest {
         DeviceTwin dt = Deencapsulation.getField(dc,"deviceTwin");
         Twin t = Deencapsulation.getField(dt,"twinObject");
         t.updateTwin("{\"desired\":{\"diag_enable\":\"true\",\"diag_sample_rate\":50}}");
+
+        DeviceClientWrapper wrapper2 = new DeviceClientWrapper(DEVICE_CONNECTION_STRING,new ContinuousDiagnosticProvider(IDiagnosticProvider.SamplingRateSource.Client,20));
+        wrapper2.open();
+        wrapper2.startDeviceTwin(mockIHCB,null,mockPCB,null);
+
+        DeviceClient dc2 = Deencapsulation.getField(wrapper2,"deviceClient");
+        DeviceTwin dt2 = Deencapsulation.getField(dc2,"deviceTwin");
+        Twin t2 = Deencapsulation.getField(dt2,"twinObject");
+        t2.updateTwin("{\"desired\":{\"diag_enable\":\"true\",\"diag_sample_rate\":50}}");
+
+        DeviceClientWrapper wrapper3 = new DeviceClientWrapper(DEVICE_CONNECTION_STRING,new ContinuousDiagnosticProvider(IDiagnosticProvider.SamplingRateSource.None,20));
+        wrapper3.open();
+        wrapper3.startDeviceTwin(mockIHCB,null,mockPCB,null);
+
+        DeviceClient dc3 = Deencapsulation.getField(wrapper3,"deviceClient");
+        DeviceTwin dt3 = Deencapsulation.getField(dc3,"deviceTwin");
+        Twin t3 = Deencapsulation.getField(dt3,"twinObject");
+        t3.updateTwin("{\"desired\":{\"diag_enable\":\"true\",\"diag_sample_rate\":50}}");
+        
         new Verifications()
         {
             {
