@@ -43,8 +43,8 @@ public class DeviceClientWrapperTest {
     }
 
     @Test
-    // When connection open, start device twin automatically
-    public void startDeviceTwinOnConnectionOpen(
+    // When connection open in Server mode, start device twin automatically
+    public void startDeviceTwinOnConnectionOpenInServerMode(
             @Mocked final MqttTransport mockTransport,
             @Mocked final Twin mockTwin
     )
@@ -57,12 +57,40 @@ public class DeviceClientWrapperTest {
                 result = true;
             }
         };
-        DeviceClientWrapper wrapper = new DeviceClientWrapper(DEVICE_CONNECTION_STRING,mockDiagnosticProvider);
+        DeviceClientWrapper wrapper = new DeviceClientWrapper(DEVICE_CONNECTION_STRING,new ContinuousDiagnosticProvider(IDiagnosticProvider.SamplingRateSource.Server,20));
         wrapper.open();
         new Verifications()
         {
             {
                 new Twin((TwinChangedCallback)any,(TwinChangedCallback)any);
+            }
+        };
+    }
+
+    @Test
+    // When connection open in Client/None mode, start device twin automatically
+    public void startDeviceTwinOnConnectionOpenInClientOrNoneMode(
+            @Mocked final MqttTransport mockTransport,
+            @Mocked final Twin mockTwin
+    )
+            throws URISyntaxException, IOException
+    {
+        new NonStrictExpectations()
+        {
+            {
+                mockTransport.isEmpty();
+                result = true;
+            }
+        };
+        DeviceClientWrapper wrapper = new DeviceClientWrapper(DEVICE_CONNECTION_STRING,new ContinuousDiagnosticProvider(IDiagnosticProvider.SamplingRateSource.Client,20));
+        wrapper.open();
+        DeviceClientWrapper wrapper2 = new DeviceClientWrapper(DEVICE_CONNECTION_STRING,new ContinuousDiagnosticProvider(IDiagnosticProvider.SamplingRateSource.None,20));
+        wrapper2.open();
+        new Verifications()
+        {
+            {
+                new Twin((TwinChangedCallback)any,(TwinChangedCallback)any);
+                times = 0;
             }
         };
     }
