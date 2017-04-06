@@ -89,7 +89,9 @@ public class DeviceClientWrapper {
 
     public void open() throws IOException {
         this.deviceClient.open();
-        this.deviceClient.startDeviceTwin(this.twinStatusCallback,this.twinStatusCallbackContext,this.twinGenericCallback,this.twinGenericCallbackContext);
+        if(diagnosticProvider.getSamplingRateSource() == IDiagnosticProvider.SamplingRateSource.Server) {
+            this.deviceClient.startDeviceTwin(this.twinStatusCallback, this.twinStatusCallbackContext, this.twinGenericCallback, this.twinGenericCallbackContext);
+        }
     }
 
     public void close() throws IOException {
@@ -126,6 +128,9 @@ public class DeviceClientWrapper {
             this.twinStatusCallback.userTwinStatusCallbackContext = deviceTwinStatusCallbackContext;
             this.twinGenericCallback.userTwinGenericCallback = genericPropertyCallBack;
             this.twinGenericCallback.userTwinGenericCallbackContext = genericPropertyCallBackContext;
+            if(diagnosticProvider.getSamplingRateSource() != IDiagnosticProvider.SamplingRateSource.Server) {
+                this.deviceClient.startDeviceTwin(this.twinStatusCallback, this.twinStatusCallbackContext, this.twinGenericCallback, this.twinGenericCallbackContext);
+            }
         }
     }
 

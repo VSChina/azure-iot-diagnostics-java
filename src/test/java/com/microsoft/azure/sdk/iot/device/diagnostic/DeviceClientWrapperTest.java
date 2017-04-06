@@ -68,8 +68,8 @@ public class DeviceClientWrapperTest {
     }
 
     @Test
-    // When connection open in Client/None mode, start device twin automatically
-    public void startDeviceTwinOnConnectionOpenInClientOrNoneMode(
+    // When connection open in Client/None mode, do not start device twin automatically
+    public void doNotStartDeviceTwinOnConnectionOpenInClientOrNoneMode(
             @Mocked final MqttTransport mockTransport,
             @Mocked final Twin mockTwin
     )
@@ -162,7 +162,9 @@ public class DeviceClientWrapperTest {
     @Test
     // Sampling rate will not be update when source is client
     public void samplingRateWillNotBeUpdateWhenSourceIsClient(
-            @Mocked final MqttTransport mockTransport)
+            @Mocked final MqttTransport mockTransport,
+            @Mocked final IotHubEventCallback mockEventCallback,
+            @Mocked final PropertyCallBack mockPropertyCallback)
             throws URISyntaxException, IOException
     {
         new NonStrictExpectations()
@@ -177,6 +179,8 @@ public class DeviceClientWrapperTest {
         DeviceClientWrapper wrapper = new DeviceClientWrapper(DEVICE_CONNECTION_STRING, new BaseDiagnosticProvider(IDiagnosticProvider.SamplingRateSource.Client,20) {
         });
         wrapper.open();
+        wrapper.startDeviceTwin(mockEventCallback,null,mockPropertyCallback,null);
+
 
         DeviceClient dc = Deencapsulation.getField(wrapper,"deviceClient");
         DeviceTwin dt = Deencapsulation.getField(dc,"deviceTwin");
@@ -189,7 +193,9 @@ public class DeviceClientWrapperTest {
     @Test
     // Sampling rate will not be update when source is none
     public void samplingRateWillNotBeUpdateWhenSourceIsNone(
-            @Mocked final MqttTransport mockTransport)
+            @Mocked final MqttTransport mockTransport,
+            @Mocked final IotHubEventCallback mockEventCallback,
+            @Mocked final PropertyCallBack mockPropertyCallback)
             throws URISyntaxException, IOException
     {
         new NonStrictExpectations()
@@ -204,6 +210,8 @@ public class DeviceClientWrapperTest {
         DeviceClientWrapper wrapper = new DeviceClientWrapper(DEVICE_CONNECTION_STRING, new BaseDiagnosticProvider(IDiagnosticProvider.SamplingRateSource.None,20) {
         });
         wrapper.open();
+        wrapper.startDeviceTwin(mockEventCallback,null,mockPropertyCallback,null);
+
 
         DeviceClient dc = Deencapsulation.getField(wrapper,"deviceClient");
         DeviceTwin dt = Deencapsulation.getField(dc,"deviceTwin");
@@ -243,7 +251,9 @@ public class DeviceClientWrapperTest {
     @Test
     // Sampling switch will not be changed when source is none
     public void samplingWillNotBeChangedWhenSourceIsNone(
-            @Mocked final MqttTransport mockTransport)
+            @Mocked final MqttTransport mockTransport,
+            @Mocked final IotHubEventCallback mockEventCallback,
+            @Mocked final PropertyCallBack mockPropertyCallback)
             throws URISyntaxException, IOException
     {
         new NonStrictExpectations()
@@ -257,6 +267,7 @@ public class DeviceClientWrapperTest {
         DeviceClientWrapper wrapper = new DeviceClientWrapper(DEVICE_CONNECTION_STRING, new BaseDiagnosticProvider(IDiagnosticProvider.SamplingRateSource.None,100) {
         });
         wrapper.open();
+        wrapper.startDeviceTwin(mockEventCallback,null,mockPropertyCallback,null);
 
         DeviceClient dc = Deencapsulation.getField(wrapper,"deviceClient");
         DeviceTwin dt = Deencapsulation.getField(dc,"deviceTwin");
@@ -269,7 +280,9 @@ public class DeviceClientWrapperTest {
     @Test
     // Sampling switch will not be changed when source is Client
     public void samplingSwitchWillNotBeChangedWhenSourceIsClient(
-            @Mocked final MqttTransport mockTransport)
+            @Mocked final MqttTransport mockTransport,
+            @Mocked final IotHubEventCallback mockEventCallback,
+            @Mocked final PropertyCallBack mockPropertyCallback)
             throws URISyntaxException, IOException
     {
         new NonStrictExpectations()
@@ -283,6 +296,7 @@ public class DeviceClientWrapperTest {
         DeviceClientWrapper wrapper = new DeviceClientWrapper(DEVICE_CONNECTION_STRING, new BaseDiagnosticProvider(IDiagnosticProvider.SamplingRateSource.Client,100) {
         });
         wrapper.open();
+        wrapper.startDeviceTwin(mockEventCallback,null,mockPropertyCallback,null);
 
         DeviceClient dc = Deencapsulation.getField(wrapper,"deviceClient");
         DeviceTwin dt = Deencapsulation.getField(dc,"deviceTwin");
