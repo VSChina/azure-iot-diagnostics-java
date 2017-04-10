@@ -90,7 +90,17 @@ public class DeviceClientWrapper {
     public void open() throws IOException {
         this.deviceClient.open();
         if(diagnosticProvider.getSamplingRateSource() == IDiagnosticProvider.SamplingRateSource.Server) {
-            this.deviceClient.startDeviceTwin(this.twinStatusCallback, this.twinStatusCallbackContext, this.twinGenericCallback, this.twinGenericCallbackContext);
+            int retryTimes = 3;
+            for(int i=0;i<retryTimes;i++) {
+                try {
+                    this.deviceClient.startDeviceTwin(this.twinStatusCallback, this.twinStatusCallbackContext, this.twinGenericCallback, this.twinGenericCallbackContext);
+                    return;
+                }catch(Exception e) {
+                    if(i == retryTimes-1) {
+                        System.out.println("Start device twin failed.Detailed : " + e.getMessage());
+                    }
+                }
+            }
         }
     }
 
