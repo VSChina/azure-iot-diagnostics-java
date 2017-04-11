@@ -59,6 +59,11 @@ public class DeviceClientWrapperTest {
         };
         DeviceClientWrapper wrapper = new DeviceClientWrapper(DEVICE_CONNECTION_STRING,new ContinuousDiagnosticProvider(IDiagnosticProvider.SamplingRateSource.Server,20));
         wrapper.open();
+        try {
+            Thread.sleep(20);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         new Verifications()
         {
             {
@@ -112,6 +117,11 @@ public class DeviceClientWrapperTest {
 
         DeviceClientWrapper wrapper = new DeviceClientWrapper(DEVICE_CONNECTION_STRING,new ContinuousDiagnosticProvider(IDiagnosticProvider.SamplingRateSource.Server,10));
         wrapper.open();
+        try {
+            Thread.sleep(20);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         wrapper.startDeviceTwin(mockIHCB,null,mockPCB,null);
 
         DeviceClient dc = Deencapsulation.getField(wrapper,"deviceClient");
@@ -164,6 +174,11 @@ public class DeviceClientWrapperTest {
 
         DeviceClientWrapper wrapper = new DeviceClientWrapper(DEVICE_CONNECTION_STRING,new ContinuousDiagnosticProvider(IDiagnosticProvider.SamplingRateSource.Server,20));
         wrapper.open();
+        try {
+            Thread.sleep(20);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         wrapper.startDeviceTwin(mockIHCB,null,mockPCB,null);
 
         DeviceClient dc = Deencapsulation.getField(wrapper,"deviceClient");
@@ -278,7 +293,11 @@ public class DeviceClientWrapperTest {
         DeviceClientWrapper wrapper = new DeviceClientWrapper(DEVICE_CONNECTION_STRING, new BaseDiagnosticProvider(IDiagnosticProvider.SamplingRateSource.Server,20) {
         });
         wrapper.open();
-
+        try {
+            Thread.sleep(20);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         DeviceClient dc = Deencapsulation.getField(wrapper,"deviceClient");
         DeviceTwin dt = Deencapsulation.getField(dc,"deviceTwin");
         Twin t = Deencapsulation.getField(dt,"twinObject");
@@ -383,7 +402,11 @@ public class DeviceClientWrapperTest {
         DeviceClientWrapper wrapper = new DeviceClientWrapper(DEVICE_CONNECTION_STRING, new BaseDiagnosticProvider(IDiagnosticProvider.SamplingRateSource.Server,0) {
         });
         wrapper.open();
-
+        try {
+            Thread.sleep(20);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         DeviceClient dc = Deencapsulation.getField(wrapper,"deviceClient");
         DeviceTwin dt = Deencapsulation.getField(dc,"deviceTwin");
         Twin t = Deencapsulation.getField(dt,"twinObject");
@@ -409,7 +432,11 @@ public class DeviceClientWrapperTest {
         DeviceClientWrapper wrapper = new DeviceClientWrapper(DEVICE_CONNECTION_STRING, new BaseDiagnosticProvider(IDiagnosticProvider.SamplingRateSource.Server,0) {
         });
         wrapper.open();
-
+        try {
+            Thread.sleep(20);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         DeviceClient dc = Deencapsulation.getField(wrapper,"deviceClient");
         DeviceTwin dt = Deencapsulation.getField(dc,"deviceTwin");
         Twin t = Deencapsulation.getField(dt,"twinObject");
@@ -436,6 +463,11 @@ public class DeviceClientWrapperTest {
         DeviceClientWrapper wrapper = new DeviceClientWrapper(DEVICE_CONNECTION_STRING, new BaseDiagnosticProvider(IDiagnosticProvider.SamplingRateSource.Server,0) {
         });
         wrapper.open();
+        try {
+            Thread.sleep(20);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         DeviceClient dc = Deencapsulation.getField(wrapper,"deviceClient");
         DeviceTwin dt = Deencapsulation.getField(dc,"deviceTwin");
