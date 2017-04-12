@@ -14,6 +14,7 @@ public abstract class BaseDiagnosticProvider implements IDiagnosticProvider {
     protected IDiagnosticProvider.SamplingRateSource samplingRateSource;
     protected int samplingRatePercentage;
     protected int messageNumber;
+    private SimpleDateFormat simpleDateFormat;
 
     public boolean isServerSamplingTurnedOn() {
         return serverSamplingTurnedOn;
@@ -54,6 +55,8 @@ public abstract class BaseDiagnosticProvider implements IDiagnosticProvider {
         this.samplingRatePercentage = samplingRatePercentage;
         this.serverSamplingTurnedOn = false;
         this.messageNumber = 0;
+        simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
     }
 
     public boolean ShouldAddDiagnosticProperties() {
@@ -87,9 +90,8 @@ public abstract class BaseDiagnosticProvider implements IDiagnosticProvider {
 
         // add condition
         message.setProperty(KEY_CORRELATION_ID, UUID.randomUUID().toString());
-        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-        f.setTimeZone(TimeZone.getTimeZone("UTC"));
-        message.setProperty(KEY_BEFORE_SEND_REQUEST, f.format(new Date()));
+
+        message.setProperty(KEY_BEFORE_SEND_REQUEST, simpleDateFormat.format(new Date()));
         message.setProperty(KEY_VERSION, DIAGNOSTIC_VERSION);
         return message;
     }
