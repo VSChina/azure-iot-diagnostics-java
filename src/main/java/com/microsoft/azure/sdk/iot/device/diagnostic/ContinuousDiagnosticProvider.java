@@ -13,7 +13,7 @@ public class ContinuousDiagnosticProvider extends BaseDiagnosticProvider {
         if(!super.ShouldAddDiagnosticProperties()) {
             return false;
         }
-        return Math.floor((messageCounter - 2) * samplingRatePercentage / 100.0) < Math.floor((messageCounter - 1) * samplingRatePercentage / 100.0);
+        return Math.floor((messageNumber - 2) * samplingRatePercentage / 100.0) < Math.floor((messageNumber - 1) * samplingRatePercentage / 100.0);
     }
 
 }
