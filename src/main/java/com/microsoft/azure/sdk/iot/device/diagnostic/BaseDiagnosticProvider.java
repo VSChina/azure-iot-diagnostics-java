@@ -2,7 +2,9 @@ package com.microsoft.azure.sdk.iot.device.diagnostic;
 
 import com.microsoft.azure.sdk.iot.device.Message;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 import java.util.UUID;
 
 /**
@@ -85,7 +87,9 @@ public abstract class BaseDiagnosticProvider implements IDiagnosticProvider {
 
         // add condition
         message.setProperty(KEY_CORRELATION_ID, UUID.randomUUID().toString());
-        message.setProperty(KEY_BEFORE_SEND_REQUEST, new Date().toString());
+        SimpleDateFormat f = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        f.setTimeZone(TimeZone.getTimeZone("UTC"));
+        message.setProperty(KEY_BEFORE_SEND_REQUEST, f.format(new Date()));
         message.setProperty(KEY_VERSION, DIAGNOSTIC_VERSION);
         return message;
     }
