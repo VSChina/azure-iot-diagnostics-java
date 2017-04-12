@@ -124,13 +124,18 @@ public class DeviceClientWrapper {
     {
         if(this.userCalledStartTwin) {
             this.deviceClient.startDeviceTwin(deviceTwinStatusCallback, deviceTwinStatusCallbackContext, genericPropertyCallBack, genericPropertyCallBackContext);
-        }else{
+        }else {
             this.userCalledStartTwin = true;
             this.twinStatusCallback.userTwinStatusCallback = deviceTwinStatusCallback;
             this.twinStatusCallback.userTwinStatusCallbackContext = deviceTwinStatusCallbackContext;
             this.twinGenericCallback.userTwinGenericCallback = genericPropertyCallBack;
             this.twinGenericCallback.userTwinGenericCallbackContext = genericPropertyCallBackContext;
-            this.deviceClient.startDeviceTwin(this.twinStatusCallback, this.twinStatusCallbackContext, this.twinGenericCallback, this.twinGenericCallbackContext);
+            try {
+                this.deviceClient.startDeviceTwin(this.twinStatusCallback, this.twinStatusCallbackContext, this.twinGenericCallback, this.twinGenericCallbackContext);
+            }
+            catch(UnsupportedOperationException e) {
+                return;
+            }
         }
     }
 
