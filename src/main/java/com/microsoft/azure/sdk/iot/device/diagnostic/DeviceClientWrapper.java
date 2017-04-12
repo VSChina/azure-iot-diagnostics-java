@@ -1,4 +1,4 @@
-package com.microsoft.vs.diagnostic;
+package com.microsoft.azure.sdk.iot.device.diagnostic;
 
 import com.microsoft.azure.sdk.iot.device.*;
 import com.microsoft.azure.sdk.iot.device.DeviceTwin.*;
@@ -6,6 +6,7 @@ import com.microsoft.azure.sdk.iot.device.DeviceTwin.*;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 /**
@@ -15,10 +16,10 @@ public class DeviceClientWrapper {
     private DeviceClient deviceClient;
     private IDiagnosticProvider diagnosticProvider;
     private boolean userCalledStartTwin;
-    private TwinStatusCallBack _twinStatusCallback;
-    private Object _twinStatusCallbackContext;
-    private TwinGenericCallBack _twinGenericCallback;
-    private Object _twinGenericCallbackContext;
+    private TwinStatusCallBack twinStatusCallback;
+    private Object twinStatusCallbackContext;
+    private TwinGenericCallBack twinGenericCallback;
+    private Object twinGenericCallbackContext;
 
 
     protected class TwinStatusCallBack implements IotHubEventCallback{
@@ -37,21 +38,22 @@ public class DeviceClientWrapper {
         public Object userTwinGenericCallbackContext;
 
         public void PropertyCall(String propertyKey, Object propertyValue, Object context){
-            if(propertyKey.equals(IDiagnosticProvider.KEY_TWIN_DIAG_SAMPLE_RATE)) {
-                if(diagnosticProvider.getSamplingRateSource() == IDiagnosticProvider.SamplingRateSource.Server) {
+            if (propertyKey.equals(IDiagnosticProvider.KEY_TWIN_DIAG_SAMPLE_RATE)) {
+                if (diagnosticProvider.getSamplingRateSource() == IDiagnosticProvider.SamplingRateSource.Server) {
                     try {
                         // in Java SDK, integer value will be converted to float value
                         // e.g., set a => 10, here propertyValue is 10.0
                         // so make a workaround
                         Double temp = Double.parseDouble((String) propertyValue);
                         int newVal = temp.intValue();
-                        if(newVal<0 || newVal>100) {
+                        if (newVal < 0 || newVal > 100) {
                             throw new Exception();
                         }
                         System.out.println("Sampling rate changed to " + newVal);
                         diagnosticProvider.setSamplingRatePercentage(newVal);
                     } catch (Exception e) {
-                        System.out.println("Received invalid value of sampling percentage");
+                        System.out.println("Received invalid value of sampling percentage " + propertyValue + " , set to zero");
+                        diagnosticProvider.setSamplingRatePercentage(0);
                         return;
                     }
                 }
@@ -63,7 +65,8 @@ public class DeviceClientWrapper {
                 }else if(val.equals("false")) {
                     diagnosticProvider.setServerSamplingTurnedOn(false);
                 }else {
-                    System.out.println("Received invalid value of sampling switch");
+                    System.out.println("Received invalid value of sampling switch " + val + " , set to false");
+                    diagnosticProvider.setServerSamplingTurnedOn(false);
                     return;
                 }
             }
@@ -73,17 +76,24 @@ public class DeviceClientWrapper {
         }
     }
 
+    public DeviceClientWrapper(String connString) throws URISyntaxException {
+        this(connString,new ContinuousDiagnosticProvider(IDiagnosticProvider.SamplingRateSource.None,0));
+    }
+
     public DeviceClientWrapper(String connString,IDiagnosticProvider diagnosticProvider) throws URISyntaxException {
         this.deviceClient = new DeviceClient(connString,IotHubClientProtocol.MQTT);
         this.diagnosticProvider = diagnosticProvider;
         this.userCalledStartTwin = false;
-        this._twinStatusCallback = new TwinStatusCallBack();
-        this._twinGenericCallback = new TwinGenericCallBack();
+        this.twinStatusCallback = new TwinStatusCallBack();
+        this.twinGenericCallback = new TwinGenericCallBack();
     }
 
     public void open() throws IOException {
         this.deviceClient.open();
-        this.deviceClient.startDeviceTwin(this._twinStatusCallback,this._twinStatusCallbackContext,this._twinGenericCallback,this._twinGenericCallbackContext);
+        if(diagnosticProvider.getSamplingRateSource() == IDiagnosticProvider.SamplingRateSource.Server) {
+            GetTwinThread getTwinThread = new GetTwinThread(deviceClient,3,10,18,twinStatusCallback,twinStatusCallbackContext,twinGenericCallback,twinGenericCallbackContext);
+            new Thread(getTwinThread).start();
+        }
     }
 
     public void close() throws IOException {
@@ -116,10 +126,11 @@ public class DeviceClientWrapper {
             this.deviceClient.startDeviceTwin(deviceTwinStatusCallback, deviceTwinStatusCallbackContext, genericPropertyCallBack, genericPropertyCallBackContext);
         }else{
             this.userCalledStartTwin = true;
-            this._twinStatusCallback.userTwinStatusCallback = deviceTwinStatusCallback;
-            this._twinStatusCallback.userTwinStatusCallbackContext = deviceTwinStatusCallbackContext;
-            this._twinGenericCallback.userTwinGenericCallback = genericPropertyCallBack;
-            this._twinGenericCallback.userTwinGenericCallbackContext = genericPropertyCallBackContext;
+            this.twinStatusCallback.userTwinStatusCallback = deviceTwinStatusCallback;
+            this.twinStatusCallback.userTwinStatusCallbackContext = deviceTwinStatusCallbackContext;
+            this.twinGenericCallback.userTwinGenericCallback = genericPropertyCallBack;
+            this.twinGenericCallback.userTwinGenericCallbackContext = genericPropertyCallBackContext;
+            this.deviceClient.startDeviceTwin(this.twinStatusCallback, this.twinStatusCallbackContext, this.twinGenericCallback, this.twinGenericCallbackContext);
         }
     }
 
@@ -136,5 +147,53 @@ public class DeviceClientWrapper {
     public void subscribeToDeviceMethod(DeviceMethodCallback deviceMethodCallback, Object deviceMethodCallbackContext, IotHubEventCallback deviceMethodStatusCallback, Object deviceMethodStatusCallbackContext) throws IOException
     {
         this.deviceClient.subscribeToDeviceMethod(deviceMethodCallback,deviceMethodCallbackContext,deviceMethodStatusCallback,deviceMethodStatusCallbackContext);
+    }
+}
+
+class GetTwinThread implements Runnable
+{
+    private DeviceClient deviceClient;
+    private int retryTimes;
+    private int retrySpanMinInSecond;
+    private int retrySpanMaxInSecond;
+    private Random rand;
+
+    private DeviceClientWrapper.TwinStatusCallBack twinStatusCallback;
+    private Object twinStatusCallbackContext;
+    private DeviceClientWrapper.TwinGenericCallBack twinGenericCallback;
+    private Object twinGenericCallbackContext;
+    public GetTwinThread(DeviceClient deviceClient,int retryTimes,int retrySpanMinInSecond,int retrySpanMaxInSecond,DeviceClientWrapper.TwinStatusCallBack twinStatusCallback,Object twinStatusCallbackContext,DeviceClientWrapper.TwinGenericCallBack twinGenericCallback,Object twinGenericCallbackContext) {
+        this.deviceClient = deviceClient;
+        this.retrySpanMaxInSecond = retrySpanMaxInSecond;
+        this.retrySpanMinInSecond = retrySpanMinInSecond;
+        this.retryTimes = retryTimes;
+
+        this.twinStatusCallback = twinStatusCallback;
+        this.twinStatusCallbackContext = twinStatusCallbackContext;
+        this.twinGenericCallback = twinGenericCallback;
+        this.twinGenericCallbackContext = twinGenericCallbackContext;
+        rand = new Random();
+    }
+    public void run()
+    {
+        for(int i=0;i<retryTimes;i++) {
+            try {
+                this.deviceClient.startDeviceTwin(this.twinStatusCallback, this.twinStatusCallbackContext, this.twinGenericCallback, this.twinGenericCallbackContext);
+                return;
+            }catch (UnsupportedOperationException e) {
+                return;
+            }catch (Exception e) {
+                if(i == retryTimes-1) {
+                    System.out.println("Start device twin failed.Detailed : " + e.getMessage());
+                }
+
+                try {
+                    int s = rand.nextInt(retrySpanMaxInSecond-retrySpanMinInSecond)+retrySpanMinInSecond;
+                    Thread.sleep(s*1000);
+                } catch (InterruptedException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        }
     }
 }

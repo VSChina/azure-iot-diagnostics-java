@@ -1,4 +1,4 @@
-package com.microsoft.vs.diagnostic;
+package com.microsoft.azure.sdk.iot.device.diagnostic;
 
 /**
  * Created by zhqqi on 3/29/2017.
@@ -11,8 +11,8 @@ public class ContinuousDiagnosticProvider extends BaseDiagnosticProvider {
     }
 
     @Override
-    public boolean NeedSampling() {
-        if(!super.NeedSampling()) {
+    public boolean ShouldAddDiagnosticProperties() {
+        if(!super.ShouldAddDiagnosticProperties()) {
             return false;
         }
         counter = counter + samplingRatePercentage;
@@ -22,4 +22,5 @@ public class ContinuousDiagnosticProvider extends BaseDiagnosticProvider {
         }
         return false;
     }
+
 }

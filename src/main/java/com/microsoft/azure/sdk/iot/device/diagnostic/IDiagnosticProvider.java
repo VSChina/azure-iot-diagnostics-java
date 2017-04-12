@@ -1,4 +1,4 @@
-package com.microsoft.vs.diagnostic;
+package com.microsoft.azure.sdk.iot.device.diagnostic;
 
 import com.microsoft.azure.sdk.iot.device.Message;
 
@@ -20,7 +20,7 @@ public interface IDiagnosticProvider {
     static String KEY_TWIN_DIAG_ENABLE = "diag_enable";
 
     public Message Process(Message message);
-    public boolean NeedSampling();
+    public boolean ShouldAddDiagnosticProperties();
     public SamplingRateSource getSamplingRateSource();
     public void setSamplingRateSource(BaseDiagnosticProvider.SamplingRateSource samplingRateSource);
     public int getSamplingRatePercentage();

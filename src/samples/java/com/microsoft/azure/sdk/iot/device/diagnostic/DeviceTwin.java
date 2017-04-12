@@ -1,12 +1,16 @@
 // Copyright (c) Microsoft. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-package com.microsoft.vs.diagnostic;
+package com.microsoft.azure.sdk.iot.device.diagnostic;
 
 import com.microsoft.azure.sdk.iot.device.*;
 import com.microsoft.azure.sdk.iot.device.DeviceTwin.Device;
 import com.microsoft.azure.sdk.iot.device.DeviceTwin.Property;
 import com.microsoft.azure.sdk.iot.device.DeviceTwin.PropertyCallBack;
+import com.microsoft.azure.sdk.iot.device.diagnostic.ContinuousDiagnosticProvider;
+import com.microsoft.azure.sdk.iot.device.diagnostic.DeviceClientWrapper;
+import com.microsoft.azure.sdk.iot.device.diagnostic.IDiagnosticProvider;
+
 
 
 import java.io.IOException;

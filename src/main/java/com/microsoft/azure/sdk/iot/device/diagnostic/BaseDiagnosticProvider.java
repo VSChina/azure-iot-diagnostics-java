@@ -1,4 +1,4 @@
-package com.microsoft.vs.diagnostic;
+package com.microsoft.azure.sdk.iot.device.diagnostic;
 
 import com.microsoft.azure.sdk.iot.device.Message;
 
@@ -52,7 +52,7 @@ public abstract class BaseDiagnosticProvider implements IDiagnosticProvider {
         this.serverSamplingTurnedOn = false;
     }
 
-    public boolean NeedSampling() {
+    public boolean ShouldAddDiagnosticProperties() {
         if(samplingRateSource == SamplingRateSource.None) {
             return false;
         }
@@ -62,8 +62,9 @@ public abstract class BaseDiagnosticProvider implements IDiagnosticProvider {
         return true;
     }
 
-    public Message Process(Message message) {
-        if(!NeedSampling()) {
+    @Override
+    public final Message Process(Message message) {
+        if(!ShouldAddDiagnosticProperties()) {
             return message;
         }
 
