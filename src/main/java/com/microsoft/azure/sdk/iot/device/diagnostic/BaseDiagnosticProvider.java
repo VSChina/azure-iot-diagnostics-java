@@ -11,6 +11,7 @@ import java.util.UUID;
 public abstract class BaseDiagnosticProvider implements IDiagnosticProvider {
     protected IDiagnosticProvider.SamplingRateSource samplingRateSource;
     protected int samplingRatePercentage;
+    protected int messageCounter;
 
     public boolean isServerSamplingTurnedOn() {
         return serverSamplingTurnedOn;
@@ -50,6 +51,7 @@ public abstract class BaseDiagnosticProvider implements IDiagnosticProvider {
         this.samplingRateSource = samplingRateSource;
         this.samplingRatePercentage = samplingRatePercentage;
         this.serverSamplingTurnedOn = false;
+        this.messageCounter = 0;
     }
 
     public boolean ShouldAddDiagnosticProperties() {
@@ -64,6 +66,7 @@ public abstract class BaseDiagnosticProvider implements IDiagnosticProvider {
 
     @Override
     public final Message Process(Message message) {
+        messageCounter++;
         if(!ShouldAddDiagnosticProperties()) {
             return message;
         }
