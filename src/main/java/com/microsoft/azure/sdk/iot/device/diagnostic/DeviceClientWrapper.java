@@ -81,6 +81,9 @@ public class DeviceClientWrapper {
     }
 
     public DeviceClientWrapper(String connString,IDiagnosticProvider diagnosticProvider) throws URISyntaxException {
+        if(diagnosticProvider == null) {
+            diagnosticProvider = new ContinuousDiagnosticProvider(IDiagnosticProvider.SamplingRateSource.None,0);
+        }
         this.deviceClient = new DeviceClient(connString,IotHubClientProtocol.MQTT);
         this.diagnosticProvider = diagnosticProvider;
         this.userCalledStartTwin = false;
@@ -91,7 +94,7 @@ public class DeviceClientWrapper {
     public void open() throws IOException {
         this.deviceClient.open();
         if(diagnosticProvider.getSamplingRateSource() == IDiagnosticProvider.SamplingRateSource.Server) {
-            GetTwinThread getTwinThread = new GetTwinThread(deviceClient,3,10,18,twinStatusCallback,twinStatusCallbackContext,twinGenericCallback,twinGenericCallbackContext);
+            GetTwinThread getTwinThread = new GetTwinThread(deviceClient,3,10,1800,twinStatusCallback,twinStatusCallbackContext,twinGenericCallback,twinGenericCallbackContext);
             new Thread(getTwinThread).start();
         }
     }
@@ -124,13 +127,18 @@ public class DeviceClientWrapper {
     {
         if(this.userCalledStartTwin) {
             this.deviceClient.startDeviceTwin(deviceTwinStatusCallback, deviceTwinStatusCallbackContext, genericPropertyCallBack, genericPropertyCallBackContext);
-        }else{
+        }else {
             this.userCalledStartTwin = true;
             this.twinStatusCallback.userTwinStatusCallback = deviceTwinStatusCallback;
             this.twinStatusCallback.userTwinStatusCallbackContext = deviceTwinStatusCallbackContext;
             this.twinGenericCallback.userTwinGenericCallback = genericPropertyCallBack;
             this.twinGenericCallback.userTwinGenericCallbackContext = genericPropertyCallBackContext;
-            this.deviceClient.startDeviceTwin(this.twinStatusCallback, this.twinStatusCallbackContext, this.twinGenericCallback, this.twinGenericCallbackContext);
+            try {
+                this.deviceClient.startDeviceTwin(this.twinStatusCallback, this.twinStatusCallbackContext, this.twinGenericCallback, this.twinGenericCallbackContext);
+            }
+            catch(UnsupportedOperationException e) {
+                return;
+            }
         }
     }
 

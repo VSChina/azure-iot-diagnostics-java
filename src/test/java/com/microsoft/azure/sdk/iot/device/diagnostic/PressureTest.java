@@ -30,15 +30,14 @@ public class PressureTest {
     public static List<String> getDeviceConnectionStringsFromFile(String path) throws IOException {
         List<String> result = new ArrayList<String>();
         int limit = 5;
-        try(BufferedReader br = new BufferedReader(new FileReader(path))) {
-            String line = br.readLine();
+        BufferedReader br = new BufferedReader(new FileReader(path));
+        String line = br.readLine();
 
-            while (line != null) {
-                result.add(line);
-                limit -- ;
-                if(limit == 0) return result;
-                line = br.readLine();
-            }
+        while (line != null) {
+            result.add(line);
+            limit--;
+            if (limit == 0) return result;
+            line = br.readLine();
         }
         return result;
     }
