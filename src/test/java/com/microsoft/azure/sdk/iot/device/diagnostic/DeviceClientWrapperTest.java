@@ -485,5 +485,10 @@ public class DeviceClientWrapperTest {
         final IDiagnosticProvider p = Deencapsulation.getField(wrapper,"diagnosticProvider");
         assertEquals(p.getSamplingRateSource(), IDiagnosticProvider.SamplingRateSource.None);
         assertEquals(p.getSamplingRatePercentage(),0);
+
+        DeviceClientWrapper wrapper2 = new DeviceClientWrapper(DEVICE_CONNECTION_STRING,null);
+        final IDiagnosticProvider p2 = Deencapsulation.getField(wrapper2,"diagnosticProvider");
+        assertEquals(p2.getSamplingRateSource(), IDiagnosticProvider.SamplingRateSource.None);
+        assertEquals(p2.getSamplingRatePercentage(),0);
     }
 }
