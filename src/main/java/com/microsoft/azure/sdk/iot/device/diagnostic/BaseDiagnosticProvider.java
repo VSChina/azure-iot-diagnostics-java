@@ -52,7 +52,7 @@ public abstract class BaseDiagnosticProvider implements IDiagnosticProvider {
         this.serverSamplingTurnedOn = false;
     }
 
-    public boolean NeedSampling() {
+    public boolean ShouldAddDiagnosticProperties() {
         if(samplingRateSource == SamplingRateSource.None) {
             return false;
         }
@@ -64,7 +64,7 @@ public abstract class BaseDiagnosticProvider implements IDiagnosticProvider {
 
     @Override
     public final Message Process(Message message) {
-        if(!NeedSampling()) {
+        if(!ShouldAddDiagnosticProperties()) {
             return message;
         }
 

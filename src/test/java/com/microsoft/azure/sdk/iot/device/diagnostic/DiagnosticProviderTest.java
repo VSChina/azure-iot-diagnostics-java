@@ -20,7 +20,7 @@ public class DiagnosticProviderTest {
     {
         BaseDiagnosticProvider b = new BaseDiagnosticProvider() {
             @Override
-            public boolean NeedSampling() {
+            public boolean ShouldAddDiagnosticProperties() {
                 return true;
             }
         };
@@ -37,7 +37,7 @@ public class DiagnosticProviderTest {
     {
         BaseDiagnosticProvider b = new BaseDiagnosticProvider() {
             @Override
-            public boolean NeedSampling() {
+            public boolean ShouldAddDiagnosticProperties() {
                 return true;
             }
         };
@@ -52,7 +52,7 @@ public class DiagnosticProviderTest {
     {
         BaseDiagnosticProvider b = new BaseDiagnosticProvider(IDiagnosticProvider.SamplingRateSource.Client,-1) {
             @Override
-            public boolean NeedSampling() {
+            public boolean ShouldAddDiagnosticProperties() {
                 return false;
             }
         };
@@ -66,8 +66,8 @@ public class DiagnosticProviderTest {
         ProbabilityDiagnosticProvider p = new ProbabilityDiagnosticProvider(IDiagnosticProvider.SamplingRateSource.None,50);
         int count = 0;
         for(int i = 0;i<100;i++) {
-            if(c.NeedSampling()) count++;
-            if(p.NeedSampling()) count++;
+            if(c.ShouldAddDiagnosticProperties()) count++;
+            if(p.ShouldAddDiagnosticProperties()) count++;
         }
         assertEquals(count,0);
     }
@@ -78,7 +78,7 @@ public class DiagnosticProviderTest {
     {
         BaseDiagnosticProvider b = new BaseDiagnosticProvider() {
             @Override
-            public boolean NeedSampling() {
+            public boolean ShouldAddDiagnosticProperties() {
                 return false;
             }
         };
@@ -194,7 +194,7 @@ public class DiagnosticProviderTest {
             final int num = 1000;
             int count = 0;
             for(int i = 0;i<num*100;i++) {
-                if(c.NeedSampling()) count++;
+                if(c.ShouldAddDiagnosticProperties()) count++;
             }
             int high = ((Double)(1.1*rate*num)).intValue();
             int low = ((Double)(0.9*rate*num)).intValue();
@@ -211,8 +211,8 @@ public class DiagnosticProviderTest {
         ProbabilityDiagnosticProvider p = new ProbabilityDiagnosticProvider(IDiagnosticProvider.SamplingRateSource.Server,50);
         int count = 0;
         for(int i = 0;i<100;i++) {
-            if(c.NeedSampling()) count++;
-            if(p.NeedSampling()) count++;
+            if(c.ShouldAddDiagnosticProperties()) count++;
+            if(p.ShouldAddDiagnosticProperties()) count++;
         }
         assertEquals(count,0);
     }

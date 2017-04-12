@@ -13,8 +13,8 @@ public class ProbabilityDiagnosticProvider extends BaseDiagnosticProvider {
     }
 
     @Override
-    public boolean NeedSampling() {
-        if(!super.NeedSampling()) {
+    public boolean ShouldAddDiagnosticProperties() {
+        if(!super.ShouldAddDiagnosticProperties()) {
             return false;
         }
         int n = rand.nextInt(100) + 1; //1-100

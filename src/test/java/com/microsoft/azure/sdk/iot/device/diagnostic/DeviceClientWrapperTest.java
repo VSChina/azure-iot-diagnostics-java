@@ -332,7 +332,7 @@ public class DeviceClientWrapperTest {
         Twin t = Deencapsulation.getField(dt,"twinObject");
         final IDiagnosticProvider p = Deencapsulation.getField(wrapper,"diagnosticProvider");
         t.updateTwin("{\"desired\":{\"diag_enable\":\"true\",\"diag_sample_rate\":100}}");
-        assertEquals(p.NeedSampling(),false);
+        assertEquals(p.ShouldAddDiagnosticProperties(),false);
     }
 
     @Test
@@ -361,7 +361,7 @@ public class DeviceClientWrapperTest {
         Twin t = Deencapsulation.getField(dt,"twinObject");
         final IDiagnosticProvider p = Deencapsulation.getField(wrapper,"diagnosticProvider");
         t.updateTwin("{\"desired\":{\"diag_enable\":\"false\"}}");
-        assertEquals(p.NeedSampling(),true);
+        assertEquals(p.ShouldAddDiagnosticProperties(),true);
     }
 
     @Test
@@ -382,7 +382,7 @@ public class DeviceClientWrapperTest {
         });
         wrapper.open();
         final IDiagnosticProvider p = Deencapsulation.getField(wrapper,"diagnosticProvider");
-        assertEquals(p.NeedSampling(),false);
+        assertEquals(p.ShouldAddDiagnosticProperties(),false);
     }
 
     @Test
@@ -412,7 +412,7 @@ public class DeviceClientWrapperTest {
         Twin t = Deencapsulation.getField(dt,"twinObject");
         final IDiagnosticProvider p = Deencapsulation.getField(wrapper,"diagnosticProvider");
         t.updateTwin("{\"desired\":{\"diag_enable\":\"true\",\"diag_sample_rate\":100}}");
-        assertEquals(p.NeedSampling(),true);
+        assertEquals(p.ShouldAddDiagnosticProperties(),true);
     }
 
     @Test
@@ -443,7 +443,7 @@ public class DeviceClientWrapperTest {
         final IDiagnosticProvider p = Deencapsulation.getField(wrapper,"diagnosticProvider");
         t.updateTwin("{\"desired\":{\"diag_enable\":\"true\",\"diag_sample_rate\":100}}");
         t.updateTwin("{\"desired\":{\"diag_enable\":\"tru1e\",\"diag_sample_rate\":100}}");
-        assertEquals(p.NeedSampling(),false);
+        assertEquals(p.ShouldAddDiagnosticProperties(),false);
     }
 
     @Test

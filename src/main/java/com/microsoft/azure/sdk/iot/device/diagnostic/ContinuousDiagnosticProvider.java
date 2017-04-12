@@ -11,8 +11,8 @@ public class ContinuousDiagnosticProvider extends BaseDiagnosticProvider {
     }
 
     @Override
-    public boolean NeedSampling() {
-        if(!super.NeedSampling()) {
+    public boolean ShouldAddDiagnosticProperties() {
+        if(!super.ShouldAddDiagnosticProperties()) {
             return false;
         }
         counter = counter + samplingRatePercentage;
