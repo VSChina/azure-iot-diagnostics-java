@@ -4,7 +4,7 @@
   <groupId>com.microsoft.azure.sdk.iot.device.diagnostic</groupId>
   <artifactId>azure-iot-diagnostics-java</artifactId>
   <packaging>jar</packaging>
-  <version>1.0.2</version>
+  <version>1.0.4</version>
   <build>
     <plugins>
       <plugin>

@@ -5,10 +5,8 @@ import com.microsoft.azure.sdk.iot.device.DeviceTwin.*;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Date;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Created by zhqqi on 3/23/2017.
@@ -21,7 +19,7 @@ public class DeviceClientWrapper {
     private Object twinStatusCallbackContext;
     private TwinGenericCallBack twinGenericCallback;
     private Object twinGenericCallbackContext;
-
+    private SimpleDateFormat simpleDateFormat;
 
     protected class TwinStatusCallBack implements IotHubEventCallback{
         public IotHubEventCallback userTwinStatusCallback;
@@ -51,7 +49,7 @@ public class DeviceClientWrapper {
                         if (newVal < 0 || newVal > 100) {
                             throw new Exception();
                         }
-                        System.out.println(new Date()+" Sampling rate changed to " + newVal);
+                        System.out.println(simpleDateFormat.format(new Date())+" Sampling rate changed to " + newVal);
                         diagnosticProvider.setSamplingRatePercentage(newVal);
                     } catch (Exception e) {
                         System.out.println("Received invalid value of sampling percentage " + propertyValue + " , set to zero");
@@ -91,6 +89,8 @@ public class DeviceClientWrapper {
         this.userCalledStartTwin = false;
         this.twinStatusCallback = new TwinStatusCallBack();
         this.twinGenericCallback = new TwinGenericCallBack();
+        this.simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        this.simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
     }
 
     public void open() throws IOException {
