@@ -4,20 +4,20 @@ Azure IoT Hub Java Device SDK with End-to-end Diagnostic library provides a conv
 ### Usage of End-to-End diagnostic Java SDK
 
 ```java
-        // Random Diagnostic Sampling: sampling rate is based on user settings.
-        ProbabilityDiagnosticProvider diagnosticProvider = new ProbabilityDiagnosticProvider(IDiagnosticProvider.SamplingRateSource.Client, 50);
-        DeviceClientWrapper deviceClient = new DeviceClientWrapper(deviceConnectionString, diagnosticProvider);
+// Random Diagnostic Sampling: sampling rate is based on user settings.
+ProbabilityDiagnosticProvider diagnosticProvider = new ProbabilityDiagnosticProvider(IDiagnosticProvider.SamplingRateSource.Client, 50);
+DeviceClientWrapper deviceClient = new DeviceClientWrapper(deviceConnectionString, diagnosticProvider);
 
-        // Periodic Diagnostic Sampling
-        ContinuousDiagnosticProvider diagnosticProvider = new ContinuousDiagnosticProvider(IDiagnosticProvider.SamplingRateSource.Client, 50);
-        DeviceClientWrapper deviceClient = new DeviceClientWrapper(deviceConnectionString, diagnosticProvider);
+// Periodic Diagnostic Sampling
+ContinuousDiagnosticProvider diagnosticProvider = new ContinuousDiagnosticProvider(IDiagnosticProvider.SamplingRateSource.Client, 50);
+DeviceClientWrapper deviceClient = new DeviceClientWrapper(deviceConnectionString, diagnosticProvider);
 
-        // You can also set SamplingRateSource.Server to obtain settings from device twin
-        ProbabilityDiagnosticProvider diagnosticProvider = new ProbabilityDiagnosticProvider(IDiagnosticProvider.SamplingRateSource.Server);
-        DeviceClientWrapper deviceClient = new DeviceClientWrapper(deviceConnectionString, diagnosticProvider);
+// You can also set SamplingRateSource.Server to obtain settings from device twin
+ProbabilityDiagnosticProvider diagnosticProvider = new ProbabilityDiagnosticProvider(IDiagnosticProvider.SamplingRateSource.Server);
+DeviceClientWrapper deviceClient = new DeviceClientWrapper(deviceConnectionString, diagnosticProvider);
 
-        // Disable diagnostic
-        DeviceClientWrapper deviceClient = new DeviceClientWrapper(deviceConnectionString);
+// Disable diagnostic
+DeviceClientWrapper deviceClient = new DeviceClientWrapper(deviceConnectionString);
 
 ```
 
