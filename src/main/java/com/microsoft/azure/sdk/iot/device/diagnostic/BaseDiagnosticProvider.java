@@ -46,6 +46,11 @@ public abstract class BaseDiagnosticProvider implements IDiagnosticProvider {
         this(SamplingRateSource.None,0);
     }
 
+    public BaseDiagnosticProvider(SamplingRateSource samplingRateSource)
+    {
+        this(samplingRateSource,0);
+    }
+
     public BaseDiagnosticProvider(SamplingRateSource samplingRateSource , int samplingRatePercentage) throws IllegalArgumentException
     {
         if(samplingRatePercentage > 100 || samplingRatePercentage < 0) {

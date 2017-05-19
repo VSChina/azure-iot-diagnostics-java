@@ -4,6 +4,14 @@ package com.microsoft.azure.sdk.iot.device.diagnostic;
  * Created by zhqqi on 3/29/2017.
  */
 public class ContinuousDiagnosticProvider extends BaseDiagnosticProvider {
+    public ContinuousDiagnosticProvider() {
+        super();
+    }
+
+    public ContinuousDiagnosticProvider(SamplingRateSource samplingRateSource) {
+        super(samplingRateSource);
+    }
+
     public ContinuousDiagnosticProvider(SamplingRateSource samplingRateSource , int samplingRatePercentage) {
         super(samplingRateSource,samplingRatePercentage);
     }

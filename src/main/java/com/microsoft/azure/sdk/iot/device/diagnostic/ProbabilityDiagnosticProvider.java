@@ -7,6 +7,17 @@ import java.util.Random;
  */
 public class ProbabilityDiagnosticProvider extends BaseDiagnosticProvider {
     private Random rand;
+
+    public ProbabilityDiagnosticProvider() {
+        super();
+        rand = new Random();
+    }
+
+    public ProbabilityDiagnosticProvider(IDiagnosticProvider.SamplingRateSource samplingRateSource) {
+        super(samplingRateSource);
+        rand = new Random();
+    }
+
     public ProbabilityDiagnosticProvider(IDiagnosticProvider.SamplingRateSource samplingRateSource , int samplingRatePercentage) {
         super(samplingRateSource,samplingRatePercentage);
         rand = new Random();
