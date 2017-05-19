@@ -4,7 +4,7 @@
   <groupId>com.microsoft.azure.sdk.iot.device.diagnostic</groupId>
   <artifactId>azure-iot-diagnostics-java</artifactId>
   <packaging>jar</packaging>
-  <version>1.0.0</version>
+  <version>1.0.5</version>
   <build>
     <plugins>
       <plugin>
@@ -35,7 +35,7 @@
     <dependency>
       <groupId>com.microsoft.azure.sdk.iot</groupId>
       <artifactId>iot-device-client</artifactId>
-      <version>1.1.23</version>
+      <version>1.1.26</version>
       <!--This is the current version number as of the writing of this document. Yours may be different.-->
     </dependency>
   </dependencies>

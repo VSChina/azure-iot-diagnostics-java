@@ -206,7 +206,7 @@ public class SendReceive
         System.out.format("Using communication protocol %s.\n",
                 protocol.name());
 
-        DeviceClientWrapper client = new DeviceClientWrapper(connString, new ContinuousDiagnosticProvider(IDiagnosticProvider.SamplingRateSource.Client,20));
+        DeviceClientWrapper client = new DeviceClientWrapper(connString, new ContinuousDiagnosticProvider(IDiagnosticProvider.SamplingRateSource.Server,20));
         if (pathToCertificate != null)
         {
             client.setOption("SetCertificatePath", pathToCertificate);

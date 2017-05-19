@@ -5,9 +5,8 @@ import com.microsoft.azure.sdk.iot.device.DeviceTwin.*;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Created by zhqqi on 3/23/2017.
@@ -20,7 +19,7 @@ public class DeviceClientWrapper {
     private Object twinStatusCallbackContext;
     private TwinGenericCallBack twinGenericCallback;
     private Object twinGenericCallbackContext;
-
+    private SimpleDateFormat simpleDateFormat;
 
     protected class TwinStatusCallBack implements IotHubEventCallback{
         public IotHubEventCallback userTwinStatusCallback;
@@ -37,6 +36,7 @@ public class DeviceClientWrapper {
         public PropertyCallBack userTwinGenericCallback;
         public Object userTwinGenericCallbackContext;
 
+
         public void PropertyCall(String propertyKey, Object propertyValue, Object context){
             if (propertyKey.equals(IDiagnosticProvider.KEY_TWIN_DIAG_SAMPLE_RATE)) {
                 if (diagnosticProvider.getSamplingRateSource() == IDiagnosticProvider.SamplingRateSource.Server) {
@@ -49,7 +49,7 @@ public class DeviceClientWrapper {
                         if (newVal < 0 || newVal > 100) {
                             throw new Exception();
                         }
-                        System.out.println("Sampling rate changed to " + newVal);
+                        System.out.println(simpleDateFormat.format(new Date())+" Sampling rate changed to " + newVal);
                         diagnosticProvider.setSamplingRatePercentage(newVal);
                     } catch (Exception e) {
                         System.out.println("Received invalid value of sampling percentage " + propertyValue + " , set to zero");
@@ -89,6 +89,8 @@ public class DeviceClientWrapper {
         this.userCalledStartTwin = false;
         this.twinStatusCallback = new TwinStatusCallBack();
         this.twinGenericCallback = new TwinGenericCallBack();
+        this.simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+        this.simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
     }
 
     public void open() throws IOException {
@@ -187,8 +189,12 @@ class GetTwinThread implements Runnable
         for(int i=0;i<retryTimes;i++) {
             try {
                 this.deviceClient.startDeviceTwin(this.twinStatusCallback, this.twinStatusCallbackContext, this.twinGenericCallback, this.twinGenericCallbackContext);
+                this.twinGenericCallback.setDesiredPropertyCallback(new Property(IDiagnosticProvider.KEY_TWIN_DIAG_SAMPLE_RATE,null),this.twinGenericCallback,null);
+                this.twinGenericCallback.setDesiredPropertyCallback(new Property(IDiagnosticProvider.KEY_TWIN_DIAG_ENABLE,null),this.twinGenericCallback,null);
+                this.deviceClient.subscribeToDesiredProperties(this.twinGenericCallback.getDesiredProp());
                 return;
             }catch (UnsupportedOperationException e) {
+                System.out.println("Start device twin failed.Detailed : " + e.getMessage());
                 return;
             }catch (Exception e) {
                 if(i == retryTimes-1) {
